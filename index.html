@@ -319,6 +319,26 @@
   </b><br><br>ОНА/ЕЁ ✧ БЕЛАЯ<br>ВОСЕМНАДЦАТЬ ⇀ 000721!<br>ГЕТЕРО✩ <i>ПРИНЦЕССА-ДЕВОЧКА</i><br>КОЗЕРОГ</div>
       <div class="likes" style="margin-top: 15px;"><b>LiKES!</b><br><span><b>мой парень!</b> <b>музыка</b>, фильмы, животные, <b>друзья</b>, искусство, оружие, <b>графический дизайн</b>, сон, редактирование</span></div>
       <div class="yikes" style="margin-top: 15px;"><b>yIKES!</b><br><span><b>незрелость</b>, <b>школа</b>, <b>математика</b>, <b>насекомые, жестокое обращение с животными</b>, <b>эксклюзионисты</b></span></div>
+
+        <div class="custom-player pixel-border">
+          <img src="img/cover1.jpg" class="cover" id="cover">
+          <div class="info">
+            <div class="track-title" id="trackTitle">ПОШЛАЯ МОЛЛИ - запах сирени</div>
+            <div class="progress-container">
+              <span id="currentTime">0:00</span>
+              <input type="range" id="progressBar" value="0" min="0" step="1">
+              <span id="duration">0:00</span>
+            </div>
+            <div class="controls">
+              <button onclick="prevTrack()">⏮</button>
+              <button onclick="togglePlayPause()" id="playPause">▶️</button>
+              <button onclick="nextTrack()">⏭</button>
+            </div>
+          </div>
+        </div>
+
+        <audio id="audio" preload="metadata"></audio>
+      
       <div class="yikes" style="margin-top: 15px; text-align: center;">
         <button id="playlistToggle">
           <img src="images/music-icon.png" alt="Playlist" style="width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; margin-right: 6px;">
@@ -350,7 +370,7 @@
     <img src="images/heart.png" alt="Heart" style="height: 14px; vertical-align: middle; margin-left: 5px;">
   </div>
 
-  <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+<audio id="audio" preload="metadata" src="music/track1.mp3"></audio>
 
   <div class="volume-control">
     <button id="muteBtn">🔊</button>
@@ -501,7 +521,112 @@
     });
   </script>
 
+<script>
+    const playerAudio = document.getElementById('audio');
+    const trackTitle = document.getElementById('trackTitle');
+    const cover = document.getElementById('cover');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const playPauseBtn = document.getElementById('playPause');
 
+    const playerTracks = [
+      {
+        src: "music/track1.mp3",
+        title: "lade di da da di ta dam - vsed",
+        cover: "img/cover1.jpg"
+      },
+      {
+        src: "music/track2.mp3",
+        title: "AMNEVSEMALO",
+        cover: "img/cover2.jpg"
+      },
+      {
+        src: "music/track3.mp3",
+        title: "ilyhiryu - 2006 bootleg",
+        cover: "img/cover3.jpg"
+      },
+      {
+        src: "music/track4.mp3",
+        title: "Jumpstyle Bootleg",
+        cover: "img/cover4.jpg"
+      },
+      {
+        src: "music/track5.mp3",
+        title: "acsida privet privet 2009",
+        cover: "img/cover5.jpg"
+      }
+    ];
+
+    let currentTrack = 0;
+
+    function loadTrack(index) {
+      const track = playerTracks[index];
+      playerAudio.src = track.src;
+      trackTitle.textContent = track.title;
+      cover.src = track.cover;
+      playerAudio.load();
+    }
+
+    function togglePlayPause() {
+      if (playerAudio.paused) {
+        playerAudio.play();
+        playPauseBtn.textContent = "⏸️";
+      } else {
+        playerAudio.pause();
+        playPauseBtn.textContent = "▶️";
+      }
+    }
+
+    function nextTrack() {
+      currentTrack = (currentTrack + 1) % playerTracks.length;
+      loadTrack(currentTrack);
+      playerAudio.play();
+      playPauseBtn.textContent = "⏸️";
+    }
+
+    function prevTrack() {
+      currentTrack = (currentTrack - 1 + playerTracks.length) % playerTracks.length;
+      loadTrack(currentTrack);
+      playerAudio.play();
+      playPauseBtn.textContent = "⏸️";
+    }
+
+    playerAudio.addEventListener('timeupdate', () => {
+      progressBar.max = playerAudio.duration;
+      progressBar.value = playerAudio.currentTime;
+      currentTimeEl.textContent = formatTime(playerAudio.currentTime);
+      durationEl.textContent = formatTime(playerAudio.duration);
+    });
+
+    progressBar.addEventListener('input', () => {
+      playerAudio.currentTime = progressBar.value;
+    });
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    // Auto play quando a intro some
+    introOverlay.addEventListener('click', () => {
+      loadTrack(currentTrack);
+      playerAudio.volume = 0.01;
+      playerAudio.play();
+      playPauseBtn.textContent = "⏸️";
+      let volume = 0.01;
+      const fade = setInterval(() => {
+        if (volume < 0.3) {
+          volume += 0.01;
+          playerAudio.volume = volume;
+        } else {
+          clearInterval(fade);
+        }
+      }, 100);
+    });
+  </script>
+  
   
 </body>
 </html>
