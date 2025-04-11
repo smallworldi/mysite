@@ -345,23 +345,6 @@
 
 
   <script>
-    
-    const canvas = document.getElementById('tvStatic');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    function drawStatic() {
-      const imageData = ctx.createImageData(canvas.width, canvas.height);
-      const buffer32 = new Uint32Array(imageData.data.buffer);
-      for (let i = 0; i < buffer32.length; i++) {
-        buffer32[i] = Math.random() < 0.5 ? 0xff000000 : 0xff1a1a1a;
-      }
-      ctx.putImageData(imageData, 0, 0);
-      requestAnimationFrame(drawStatic);
-    }
-
-    drawStatic();
 
     const introOverlay = document.getElementById('introOverlay');
     const mainContent = document.getElementById('mainContent');
