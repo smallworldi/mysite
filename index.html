@@ -9,6 +9,16 @@
   <title>архангел</title>
   <style>
 
+    @font-face {
+      font-family: 'MyCustomFont';
+      src: url('fonts/CutePixel.ttf') format('truetype');
+    }
+
+    .tab {
+      font-family: 'MyCustomFont', monospace;
+    }
+
+
     * {
       cursor: url('images/cursor.png'), auto !important;
     }
@@ -271,7 +281,7 @@
     <div class="tab">MY SiTE ?!</div>
     <div class="view-counter">
       <img src="images/view.png" alt="Views" style="height: 16px; vertical-align: middle; image-rendering: pixelated;">
-      <span id="viewCount" style="margin-left: 4px;">—</span>
+      <span id="viewCount" style="margin-left: 4px;">...</span>
     </div>
 
     <img src="assets/russia.png" alt="Russia Flag" style="height: 20px;">
@@ -361,7 +371,6 @@
     const playlistToggle = document.getElementById('playlistToggle');
     const playlistPanel = document.getElementById('playlistPanel');
 
-    // Escolhe aleatoriamente uma música
     const tracks = [
       'music/track1.mp3',
       'music/track2.mp3',
@@ -443,20 +452,43 @@
   </script>
 
 
-  <script>
-  const viewCountEl = document.getElementById('viewCount');
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, get, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-  fetch('https://api.countapi.xyz/update/smallworldi/githubsite/?amount=1')
-    .then(res => res.json())
-    .then(data => {
-      viewCountEl.textContent = data.value;
-    })
-    .catch(err => {
-      console.error('Erro ao buscar contador:', err);
-      viewCountEl.textContent = '??';
+    const firebaseConfig = {
+      apiKey: "AIzaSyCRWQuu18kO8cp9Wqxxfxaja2N-N6bBy28",
+      authDomain: "smallworldi.firebaseapp.com",
+      databaseURL: "https://smallworldi-default-rtdb.firebaseio.com",
+      projectId: "smallworldi",
+      storageBucket: "smallworldi.firebasestorage.app",
+      messagingSenderId: "257564157624",
+      appId: "1:257564157624:web:d65081ad0278844e90764d",
+      measurementId: "G-TJHGFLKW9N"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const viewsRef = ref(db, 'views');
+
+    const alreadyCounted = localStorage.getItem('viewedSite');
+
+    if (!alreadyCounted) {
+      runTransaction(viewsRef, current => {
+        return (current || 0) + 1;
+      }).then(() => {
+        localStorage.setItem('viewedSite', 'yes');
+      }).catch(err => {
+        console.error('Erro ao atualizar contador:', err);
+      });
+    }
+
+    get(viewsRef).then(snapshot => {
+      const count = snapshot.val() || 0;
+      document.getElementById('viewCount').textContent = count;
     });
-</script>
-
+  </script>
 
 
   
