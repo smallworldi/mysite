@@ -444,15 +444,19 @@
 
 
   <script>
-  fetch('https://api.countapi.xyz/hit/smallworldi.github.io/homepage')
+  const viewCountEl = document.getElementById('viewCount');
+
+  fetch('https://api.countapi.xyz/update/smallworldi/githubsite/?amount=1')
     .then(res => res.json())
     .then(data => {
-      document.getElementById('viewCount').textContent = data.value;
+      viewCountEl.textContent = data.value;
     })
-    .catch(() => {
-      document.getElementById('viewCount').textContent = '—';
+    .catch(err => {
+      console.error('Erro ao buscar contador:', err);
+      viewCountEl.textContent = '??';
     });
 </script>
+
 
 
   
