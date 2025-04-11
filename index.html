@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,108 +9,6 @@
 
   <title>архангел</title>
   <style>
-
-    .comment-box {
-      margin-top: 20px;
-      padding: 10px;
-      background: #000;
-      border: 4px solid white;
-      image-rendering: pixelated;
-      box-shadow:
-        0 0 0 1px #000,
-        1px 1px 0 1px #fff,
-        -1px -1px 0 1px #fff,
-        1px -1px 0 1px #fff,
-        -1px 1px 0 1px #fff;
-    }
-
-    .comment-list {
-      max-height: 150px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 13px;
-      color: white;
-      margin-bottom: 10px;
-    }
-
-    .comment-list p {
-      margin: 4px 0;
-    }
-
-    textarea#commentInput {
-      width: 100%;
-      height: 60px;
-      resize: none;
-      background: #111;
-      color: white;
-      border: 1px solid #444;
-      padding: 6px;
-      font-family: monospace;
-      font-size: 13px;
-    }
-
-    button {
-      margin-top: 5px;
-      background: black;
-      color: white;
-      border: 2px solid white;
-      padding: 5px 10px;
-      font-family: monospace;
-      cursor: pointer;
-      image-rendering: pixelated;
-    }
-
-
-    .comment-box {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: black;
-      color: white;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .comment-list {
-      flex: 1;
-      overflow-y: auto;
-      border: 1px solid white;
-      padding: 5px;
-      background-color: #111;
-      font-size: 11px;
-    }
-
-    textarea#commentInput {
-      width: 100%;
-      height: 40px;
-      resize: none;
-      font-family: 'Courier New', monospace;
-      font-size: 11px;
-      background-color: #000;
-      color: white;
-      border: 1px solid white;
-      padding: 5px;
-    }
-
-    button {
-      width: fit-content;
-      padding: 4px 8px;
-      font-size: 11px;
-      cursor: pointer;
-      background-color: #000;
-      border: 1px solid white;
-      color: white;
-      font-family: 'Courier New', monospace;
-    }
-
-    button:hover {
-      background-color: #222;
-    }
-
 
     @font-face {
       font-family: 'MyCustomFont';
@@ -376,7 +275,7 @@
 
 <div id="introOverlay"><div class="introText">КЛИК...</div></div>
 
-
+<canvas class="static-bg" id="tvStatic"></canvas>
 
 <div class="container" id="mainContent">
   <div class="header">
@@ -414,25 +313,11 @@
     <div>
       <div class="warnings"><b>TW</b> навязчивые мысли,<br>самоповреждение (изображения порезов)<br>инцест, трансфобия</div>
       <div class="warnings" style="margin-top: 10px;"><b>CW</b> негативные обсуждения геев</div>
-      <div style="margin-top: 10px;"><a href="https://discord.gg/scripture" target="_blank">дискорд-сервер</a></div>
+      <div style="margin-top: 10px;"><a href="discord.com/terms" target="_blank">дискорд-сервер</a></div>
       <div style="margin-top: 10px; position: relative; display: inline-block;">
-        <img src="images/frame.gif" alt="Frame" style="position: absolute; top: -40px; left: -40px; width: 120%; height: 120%; pointer-events: none; z-index: 2;">
+        <img src="images/frame.gif" alt="Frame" style="position: absolute; top: -40px; left: -41px; width: 120%; height: 120%; pointer-events: none; z-index: 2;">
         <img class="profile-pic" src="images/profile.png" alt="Profile Picture" style="display: block; position: relative; z-index: 1;">
-          <div class="pixel-border comment-box">
-            <div class="comment-list" id="commentList" style="max-height: 150px; overflow-y: auto;"></div>
-            <textarea id="commentInput" placeholder="Введите свой комментарий..."></textarea>
-            <button onclick="addComment()">отправить</button>
-          </div>
-
-
-
-
-
-
-
-
       </div>
-
     </div>
   </div>
 
@@ -473,7 +358,6 @@
     const playlistToggle = document.getElementById('playlistToggle');
     const playlistPanel = document.getElementById('playlistPanel');
 
-    // Escolhe aleatoriamente uma música
     const tracks = [
       'music/track1.mp3',
       'music/track2.mp3',
@@ -556,28 +440,26 @@
 
 
   <!-- Firebase SDK -->
-    <script type="module">
-      import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-      import { getDatabase, ref, push, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, get, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyCyW8MksqTWVNVwYOOKDdgpLYt1fs2MoUQ",
-        authDomain: "comentarios-site-349e1.firebaseapp.com",
-        databaseURL: "https://comentarios-site-349e1-default-rtdb.firebaseio.com",
-        projectId: "comentarios-site-349e1",
-        storageBucket: "comentarios-site-349e1.firebasestorage.app",
-        messagingSenderId: "657768705828",
-        appId: "1:657768705828:web:8584321469cddc64780db1",
-        measurementId: "G-MLP168YHQN"
-      };
+    const firebaseConfig = {
+      apiKey: "AIzaSyCRWQuu18kO8cp9Wqxxfxaja2N-N6bBy28",
+      authDomain: "smallworldi.firebaseapp.com",
+      databaseURL: "https://smallworldi-default-rtdb.firebaseio.com",
+      projectId: "smallworldi",
+      storageBucket: "smallworldi.firebasestorage.app",
+      messagingSenderId: "257564157624",
+      appId: "1:257564157624:web:d65081ad0278844e90764d",
+      measurementId: "G-TJHGFLKW9N"
+    };
 
-      // Evita erro de duplicate app
-      const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-      const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const viewsRef = ref(db, 'views');
 
-      // --- CONTADOR DE VIEWS ---
-      const viewsRef = ref(db, 'views');
-       const alreadyCounted = localStorage.getItem('viewedSite');
+    const alreadyCounted = localStorage.getItem('viewedSite');
 
     if (!alreadyCounted) {
       runTransaction(viewsRef, current => {
@@ -593,30 +475,7 @@
       const count = snapshot.val() || 0;
       document.getElementById('viewCount').textContent = count;
     });
-
-      // --- COMENTÁRIOS ---
-      const commentsRef = ref(db, 'comments');
-      const commentList = document.getElementById('commentList');
-      const commentInput = document.getElementById('commentInput');
-
-      window.addComment = function () {
-        const text = commentInput.value.trim();
-        if (text) {
-          push(commentsRef, { text });
-          commentInput.value = "";
-        }
-      };
-
-      onValue(commentsRef, snapshot => {
-        commentList.innerHTML = '';
-        snapshot.forEach(child => {
-          const comment = child.val();
-          const div = document.createElement('div');
-          div.textContent = '• ' + comment.text;
-          commentList.appendChild(div);
-        });
-      });
-    </script>
+  </script>
 
 
   
