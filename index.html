@@ -577,18 +577,22 @@
 
       // --- CONTADOR DE VIEWS ---
       const viewsRef = ref(db, 'views');
-      const alreadyCounted = localStorage.getItem('viewedSite');
+       const alreadyCounted = localStorage.getItem('viewedSite');
 
-      if (!alreadyCounted) {
-        runTransaction(viewsRef, current => (current || 0) + 1).then(() => {
-          localStorage.setItem('viewedSite', 'yes');
-        });
-      }
-
-      onValue(viewsRef, snapshot => {
-        const count = snapshot.val() || 0;
-        document.getElementById('viewCount').textContent = count;
+    if (!alreadyCounted) {
+      runTransaction(viewsRef, current => {
+        return (current || 0) + 1;
+      }).then(() => {
+        localStorage.setItem('viewedSite', 'yes');
+      }).catch(err => {
+        console.error('Erro ao atualizar contador:', err);
       });
+    }
+
+    get(viewsRef).then(snapshot => {
+      const count = snapshot.val() || 0;
+      document.getElementById('viewCount').textContent = count;
+    });
 
       // --- COMENTÁRIOS ---
       const commentsRef = ref(db, 'comments');
