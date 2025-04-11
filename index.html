@@ -444,16 +444,16 @@
 
 
   <script>
-    // Usa um contador gratuito do countapi.xyz
-    fetch('https://api.countapi.xyz/hit/smallworldi.github.io/visits')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('viewCount').textContent = data.value;
-      })
-      .catch(() => {
-        document.getElementById('viewCount').textContent = '—';
-      });
-  </script>
+  fetch('https://api.countapi.xyz/hit/smallworldi.github.io/homepage')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('viewCount').textContent = data.value;
+    })
+    .catch(() => {
+      document.getElementById('viewCount').textContent = '—';
+    });
+</script>
+
 
   
 </body>
